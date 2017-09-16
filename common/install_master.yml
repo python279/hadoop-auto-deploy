@@ -1,0 +1,13 @@
+---
+- hosts: master
+  vars_files:
+    - ../config.yml
+  user: root
+  roles:
+    - common
+    - kerberos
+    - java
+    - gmond
+    - hadoop
+    - hbase
+    - master

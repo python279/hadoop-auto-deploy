@@ -1,0 +1,3 @@
+- name: generate BasicSecurity.sh
+  template: src=BasicSecurity.sh.j2 dest={{ root_dir }}/common/BasicSecurity.sh owner=root group=root
+

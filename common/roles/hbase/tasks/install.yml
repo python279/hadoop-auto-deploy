@@ -1,0 +1,25 @@
+- name: basename {{ hbase_download_url }}
+  command: basename {{ hbase_download_url }}
+  register: hbase_tarball
+
+- name: download {{ hbase_download_url }}
+  get_url: url={{ hbase_download_url }} dest=/tmp/{{ hbase_tarball.stdout }}
+
+- name: mkdir {{ hbase_install_dir }}
+  file: path={{ hbase_install_dir }} state=directory mode=0755
+
+- name: unarchive /tmp/{{ hbase_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ hbase_tarball.stdout }}
+    dest: '{{ hbase_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: chown {{ hbase_install_dir }}
+  file: path={{ hbase_install_dir }} owner=hbase group=hadoop state=directory
+
+- name: ln -s {{ hbase_install_dir }} {{ hbase_parent.stdout }}
+  file: dest={{ hbase_parent.stdout }}/hbase-release src={{ hbase_install_dir }} owner=hbase group=hadoop state=link
+
+- name: generate /etc/profile.d/hbase.sh
+  template: src=hbase.sh.j2 dest=/etc/profile.d/hbase.sh

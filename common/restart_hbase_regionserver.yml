@@ -1,0 +1,22 @@
+---
+- hosts: regionserver
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop hbase regionserver
+      command: hbase-daemon.sh stop regionserver
+      become: true
+      become_user: hbase
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2
+
+    - name: start hbase regionserver
+      command: hbase-daemon.sh start regionserver
+      become: true
+      become_user: hbase
+      become_method: su
+      become_flags: '-s /bin/sh'

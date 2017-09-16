@@ -1,0 +1,13 @@
+---
+- hosts: spark_historyserver
+  vars_files:
+    - ../config.yml
+  user: root
+  roles:
+    - common
+    - kerberos
+    - java
+    - gmond
+    - hadoop
+    - spark
+    - spark_historyserver

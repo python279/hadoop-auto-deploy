@@ -1,0 +1,14 @@
+- name: generate hadoop-metrics2-hbase.properties
+  template: src=hadoop-metrics2-hbase.properties.j2 dest={{ hbase_install_dir }}/conf/hadoop-metrics2-hbase.properties owner=hbase group=hadoop
+
+- name: generate hbase-env.sh
+  template: src=hbase-env.sh.j2 dest={{ hbase_install_dir }}/conf/hbase-env.sh owner=hbase group=hadoop
+
+- name: generate hbase-policy.xml
+  template: src=hbase-policy.xml.j2 dest={{ hbase_install_dir }}/conf/hbase-policy.xml owner=hbase group=hadoop
+
+- name: generate hbase-site.xml
+  template: src=hbase-site.xml.j2 dest={{ hbase_install_dir }}/conf/hbase-site.xml owner=hbase group=hadoop
+
+- name: generate log4j.properties
+  template: src=log4j.properties.j2 dest={{ hbase_install_dir }}/conf/log4j.properties owner=hbase group=hadoop

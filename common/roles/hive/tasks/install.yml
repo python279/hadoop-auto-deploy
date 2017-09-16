@@ -1,0 +1,53 @@
+- name: basename {{ hive_download_url }}
+  command: basename {{ hive_download_url }}
+  register: hive_tarball
+
+- name: download {{ hive_download_url }}
+  get_url: url={{ hive_download_url }} dest=/tmp/{{ hive_tarball.stdout }}
+
+- name: mkdir {{ hive_install_dir }}
+  file: path={{ hive_install_dir }} state=directory mode=0755
+
+- name: unarchive /tmp/{{ hive_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ hive_tarball.stdout }}
+    dest: '{{ hive_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: dirname {{ hive_install_dir }}
+  command: dirname {{ hive_install_dir }}
+  register: hive_parent
+
+- name: mkdir udf
+  file: path={{ hive_install_dir }}/udf state=directory owner=hive group=hadoop
+
+- name: download udf
+  get_url: url={{ hive_udf_download_url }} dest={{ hive_install_dir }}/udf owner=hive group=hadoop
+  when: hive_udf_download_url is defined
+
+- name: basename {{ mysql_connector_java_url }}
+  command: basename {{ mysql_connector_java_url }}
+  register: mysql_connector_archive_name
+  when: mysql_connector_java_url is defined
+
+- name: download mysql-connector-java
+  get_url: url={{ mysql_connector_java_url }} dest=/tmp/{{ mysql_connector_archive_name.stdout }}
+  when: mysql_connector_java_url is defined
+
+- name: unarchive /tmp/{{ mysql_connector_archive_name.stdout }}
+  unarchive:
+    src: /tmp/{{ mysql_connector_archive_name.stdout }}
+    dest: '{{ hive_install_dir }}/lib'
+    copy: no
+    extra_opts: ['--strip-components=1']
+  when: mysql_connector_java_url is defined
+
+- name: chown {{ hive_install_dir }}
+  file: path={{ hive_install_dir }} owner=hive group=hadoop recurse=yes state=directory
+
+- name: ln -s {{ hive_install_dir }} {{ hive_parent.stdout }}
+  file: dest={{ hive_parent.stdout }}/hive-release src={{ hive_install_dir }} owner=hive group=hadoop state=link
+
+- name: generate /etc/profile.d/hive.sh
+  template: src=hive.sh.j2 dest=/etc/profile.d/hive.sh

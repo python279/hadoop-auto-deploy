@@ -1,0 +1,5 @@
+- name: mkdir {{ hbase_log_dir }}
+  file: path={{ hbase_log_dir }} state=directory owner=hbase group=hadoop
+
+- name: mkdir {{ hbase_pid_dir }}
+  file: path={{ hbase_pid_dir }} state=directory owner=hbase group=hadoop

@@ -1,0 +1,2 @@
+- name: mkdir {{ hadoop_mapred_log_dir }}
+  file: path={{ hadoop_mapred_log_dir }} owner=mapred group=hadoop mode=0755 state=directory

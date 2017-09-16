@@ -1,0 +1,5 @@
+- name: yum install ganglia-gmond ganglia-gmond-python
+  yum: name={{ item }} state=present
+  with_items:
+    - ganglia-gmond
+    - ganglia-gmond-python

@@ -1,0 +1,2 @@
+- name: enable && restart gmond
+  service: name=gmond state=restarted enabled=yes 

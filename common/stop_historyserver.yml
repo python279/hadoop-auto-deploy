@@ -1,0 +1,12 @@
+---
+- hosts: historyserver
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop historyserver
+      command: mr-jobhistory-daemon.sh stop historyserver
+      become: true
+      become_user: mapred
+      become_method: su
+      become_flags: '-s /bin/sh'

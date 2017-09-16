@@ -1,0 +1,25 @@
+---
+- hosts: journalnode
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop journalnode
+      command: hadoop-daemon.sh stop journalnode
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2
+
+    - name: start journalnode
+      command: hadoop-daemon.sh start journalnode
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2

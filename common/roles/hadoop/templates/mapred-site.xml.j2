@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property>
+    <name>yarn.app.mapreduce.am.staging-dir</name>
+    <value>/tmp/hadoop-yarn/staging</value>
+    <final>true</final>
+  </property>
+  <property>
+    <name>mapreduce.framework.name</name>
+    <value>yarn</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.cleaner.enable</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.max-age-ms</name>
+    <value>5184000000</value>
+  </property>
+  <property>
+    <name>mapreduce.cluster.local.dir</name>
+    <value>{{ hadoop_workspace | join('/mapred/local') }}/mapred/local</value>
+  </property>
+  <property>
+    <name>mapreduce.task.io.sort.mb</name>
+    <value>300</value>
+  </property>
+
+  <property>
+    <name>mapreduce.jobhistory.address</name>
+    <value>{{ groups.historyserver[0] }}:10020</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.webapp.address</name>
+    <value>{{ groups.historyserver[0] }}:19888</value>
+    <final>true</final>
+  </property>
+
+  <property>
+    <name>yarn.app.mapreduce.am.resource.mb</name>
+    <value>2048</value>
+  </property>
+  <property>
+    <name>yarn.app.mapreduce.am.resource.cpu-vcores</name>
+    <value>1</value>
+  </property>
+
+  <property>
+    <name>mapreduce.map.memory.mb</name>
+    <value>2048</value>
+    <final>true</final>
+  </property>
+  <property>
+    <name>mapreduce.reduce.memory.mb</name>
+    <value>4096</value>
+    <final>true</final>
+  </property>
+
+  <property>
+    <name>mapreduce.map.java.opts</name>
+    <value>-Duser.home=. -Xmx2000m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=15 -XX:CMSInitiatingOccupancyFraction=70</value>
+    <final>true</final>
+  </property>
+  <property>
+    <name>mapreduce.reduce.java.opts</name>
+    <value>-Duser.home=. -Xmx3600m -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+UseCMSCompactAtFullCollection -XX:CMSFullGCsBeforeCompaction=15 -XX:CMSInitiatingOccupancyFraction=70</value>
+    <final>true</final>
+  </property>
+
+  <property>
+    <name>mapred.child.java.opts</name>
+    <value>-Xmx2800m -XX:-UseGCOverheadLimit</value>
+    <final>true</final>
+  </property>
+
+  <property>
+    <name>mapreduce.map.cpu.vcores</name>
+    <value>1</value>
+  </property>
+
+  <property>
+    <name>mapreduce.reduce.cpu.vcores</name>
+    <value>1</value>
+  </property>
+  <property>
+    <name>mapreduce.map.output.compress</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>mapred.child.env</name>
+    <value>LD_LIBRARY_PATH={{ hadoop_parent }}/hadoop-release/lib/native</value>
+  </property>
+  <property>
+    <name>mapreduce.map.output.compress.codec</name>
+    <value>com.hadoop.compression.lzo.LzoCodec</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.intermediate-done-dir</name>
+    <value>hdfs://{{ cluster_name }}/mr-history/tmp</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.done-dir</name>
+    <value>hdfs://{{ cluster_name }}/mr-history/done</value>
+  </property>
+
+  <!-- jobhistory security -->
+  <property>
+    <name>mapreduce.jobhistory.keytab</name>
+    <value>/etc/security/keytab/mapred.keytab</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.principal</name>
+    <value>mapred/_HOST@{{ domain1_upper }}.{{ domain2_upper }}</value>
+  </property>
+  <property>
+    <name>mapreduce.jobhistory.http.policy</name>
+    <value>HTTPS_ONLY</value>
+  </property>
+  <property>
+    <name>mapreduce.tasktracker.http.address</name>
+    <value>0.0.0.0:50060</value>
+  </property>
+
+</configuration>
+

@@ -1,0 +1,46 @@
+- name: generate log4j.properties
+  template: src=log4j.properties.j2 dest={{ hadoop_install_dir }}/etc/hadoop/log4j.properties owner=hadoop group=hadoop
+
+- name: generate core-site.xml
+  template: src=core-site.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/core-site.xml owner=hadoop group=hadoop
+
+- name: generate hadoop-env.sh
+  template: src=hadoop-env.sh.j2 dest={{ hadoop_install_dir }}/etc/hadoop/hadoop-env.sh owner=hadoop group=hadoop
+
+- name: generate hadoop-metrics2.properties
+  template: src=hadoop-metrics2.properties.j2 dest={{ hadoop_install_dir }}/etc/hadoop/hadoop-metrics2.properties owner=hadoop group=hadoop
+
+- name: generate hdfs-site.xml
+  template: src=hdfs-site.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/hdfs-site.xml owner=hadoop group=hadoop
+
+- name: generate hosts.exclude
+  template: src=hosts.exclude.j2 dest={{ hadoop_install_dir }}/etc/hadoop/hosts.exclude owner=hadoop group=hadoop
+
+- name: generate ssl-client.xml
+  template: src=ssl-client.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/ssl-client.xml owner=hadoop group=hadoop
+
+- name: generate ssl-server.xml
+  template: src=ssl-server.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/ssl-server.xml owner=hadoop group=hadoop
+
+- name: generate yarn-env.sh
+  template: src=yarn-env.sh.j2 dest={{ hadoop_install_dir }}/etc/hadoop/yarn-env.sh owner=hadoop group=hadoop
+  when: groups.resourcemanager is defined
+
+- name: generate yarn-site.xml
+  template: src=yarn-site.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/yarn-site.xml owner=hadoop group=hadoop
+  when: groups.resourcemanager is defined
+
+- name: generate container-executor.cfg
+  template: src=container-executor.cfg.j2 dest={{ hadoop_install_dir }}/etc/hadoop/container-executor.cfg owner=root group=root
+  when: groups.resourcemanager is defined
+
+- name: generate fair-scheduler.xml
+  template: src=fair-scheduler.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/fair-scheduler.xml owner=hadoop group=hadoop
+
+- name: generate mapred-env.sh
+  template: src=mapred-env.sh.j2 dest={{ hadoop_install_dir }}/etc/hadoop/mapred-env.sh owner=hadoop group=hadoop
+  when: groups.resourcemanager is defined
+
+- name: generate mapred-site.xml
+  template: src=mapred-site.xml.j2 dest={{ hadoop_install_dir }}/etc/hadoop/mapred-site.xml owner=hadoop group=hadoop
+  when: groups.resourcemanager is defined

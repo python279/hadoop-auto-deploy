@@ -1,0 +1,29 @@
+- name: basename {{ spark_download_url }}
+  command: basename {{ spark_download_url }}
+  register: spark_tarball
+
+- name: download {{ spark_download_url }}
+  get_url: url={{ spark_download_url }} dest=/tmp/{{ spark_tarball.stdout }}
+
+- name: mkdir {{ spark_install_dir }}
+  file: path={{ spark_install_dir }} state=directory mode=0755
+
+- name: unarcspark /tmp/{{ spark_tarball.stdout }}
+  unarcspark:
+    src: /tmp/{{ spark_tarball.stdout }}
+    dest: '{{ spark_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: dirname {{ spark_install_dir }}
+  command: dirname {{ spark_install_dir }}
+  register: spark_parent
+
+- name: chown {{ spark_install_dir }}
+  file: path={{ spark_install_dir }} owner=spark group=hadoop recurse=yes state=directory
+
+- name: ln -s {{ spark_install_dir }} {{ spark_parent.stdout }}
+  file: dest={{ spark_parent.stdout }}/spark-release src={{ spark_install_dir }} owner=spark group=hadoop state=link
+
+- name: generate /etc/profile.d/spark.sh
+  template: src=spark.sh.j2 dest=/etc/profile.d/spark.sh

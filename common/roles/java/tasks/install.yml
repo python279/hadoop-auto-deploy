@@ -1,0 +1,20 @@
+- name: copy files to remote host
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - src: ./files/jdk{{ java }}-linux-x64.tar.gz
+      dest: /tmp/
+    - src: ./files/java{{ java }}.sh
+      dest: /etc/profile.d/
+
+- name: mkdir /opt/java{{ java }}
+  file: path=/opt/java{{ java }} state=directory mode=0755
+
+- name: unarchive jdk{{ java }}-linux-x64.tar.gz
+  unarchive:
+    src: /tmp/jdk{{ java }}-linux-x64.tar.gz
+    dest: /opt/java{{ java }}
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: chown /opt/java{{ java }}
+  file: path=/opt/java{{ java }} owner=root group=root recurse=yes

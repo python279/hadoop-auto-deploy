@@ -1,0 +1,59 @@
+- name: basename {{ hadoop_download_url }}
+  command: basename {{ hadoop_download_url }}
+  register: hadoop_tarball
+
+- name: download {{ hadoop_download_url }}
+  get_url: url={{ hadoop_download_url }} dest=/tmp/{{ hadoop_tarball.stdout }}
+
+- name: mkdir {{ hadoop_install_dir }}
+  file: path={{ hadoop_install_dir }} state=directory mode=0755
+
+- name: unarchive /tmp/{{ hadoop_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ hadoop_tarball.stdout }}
+    dest: '{{ hadoop_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+#- name: download hadoop-lzo-0.4.21-SNAPSHOT.jar
+#  get_url: url={{ lzo_download_url }}/hadoop-lzo-0.4.21-SNAPSHOT.jar dest={{ hadoop_install_dir }}/share/hadoop/common owner=hadoop group=hadoop
+
+#- name: download libgplcompression.a
+#  get_url: url={{ lzo_download_url }}/libgplcompression.a dest={{ hadoop_install_dir }}/lib/native owner=hadoop group=hadoop
+
+#- name: download libgplcompression.la
+#  get_url: url={{ lzo_download_url }}/libgplcompression.la dest={{ hadoop_install_dir }}/lib/native owner=hadoop group=hadoop
+
+#- name: download libgplcompression.so.0.0.0
+#  get_url: url={{ lzo_download_url }}/libgplcompression.so.0.0.0 dest={{ hadoop_install_dir }}/lib/native owner=hadoop group=hadoop
+
+#- name: make libgplcompression.so.0 link
+#  file: src={{ hadoop_install_dir }}/lib/native/libgplcompression.so.0.0.0 dest={{ hadoop_install_dir }}/lib/native/libgplcompression.so.0 state=link owner=hadoop group=hadoop
+
+#- name: make libgplcompression.so link
+#  file: src={{ hadoop_install_dir }}/lib/native/libgplcompression.so.0.0.0 dest={{ hadoop_install_dir }}/lib/native/libgplcompression.so state=link owner=hadoop group=hadoop
+
+- name: chown {{ hadoop_install_dir }}
+  file: path={{ hadoop_install_dir }} owner=hadoop group=hadoop recurse=yes state=directory
+
+- name: dirname {{ hadoop_install_dir }}
+  command: dirname {{ hadoop_install_dir }}
+  register: hadoop_parent
+
+- name: change owner/mode of container-executor
+  file: path={{ hadoop_install_dir }}/bin/container-executor owner=root group=hadoop mode=6150
+
+- name: chown {{ hadoop_install_dir }}/etc/hadoop
+  file: path={{ hadoop_install_dir }}/etc/hadoop owner=root group=root state=directory
+
+- name: chown {{ hadoop_install_dir }}/etc
+  file: path={{ hadoop_install_dir }}/etc owner=root group=root state=directory
+
+- name: chown {{ hadoop_install_dir }}
+  file: path={{ hadoop_install_dir }} owner=root group=root state=directory
+
+- name: ln -s {{ hadoop_install_dir }} {{ hadoop_parent.stdout }}
+  file: dest={{ hadoop_parent.stdout }}/hadoop-release src={{ hadoop_install_dir }} owner=hadoop group=hadoop state=link
+
+- name: generate /etc/profile.d/hadoop.sh
+  template: src=hadoop.sh.j2 dest=/etc/profile.d/hadoop.sh

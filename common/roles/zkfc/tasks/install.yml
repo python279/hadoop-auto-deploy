@@ -1,0 +1,2 @@
+- name: mkdir {{ hadoop_hdfs_log_dir }}
+  file: path={{ hadoop_hdfs_log_dir }} owner=hdfs group=hadoop mode=0755 state=directory

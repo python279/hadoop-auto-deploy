@@ -1,0 +1,12 @@
+---
+- hosts: zookeeper
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop zookeeper
+      command: zkServer.sh stop
+      become: true
+      become_user: zookeeper
+      become_method: su
+      become_flags: '-s /bin/sh'

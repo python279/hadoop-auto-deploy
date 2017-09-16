@@ -1,0 +1,35 @@
+# syntax: [prefix].[source|sink].[instance].[options]
+# See javadoc of package-info.java for org.apache.hadoop.metrics2 for details
+
+#
+# Below are for sending metrics to Ganglia
+#
+# for Ganglia 3.0 support
+# *.sink.ganglia.class=org.apache.hadoop.metrics2.sink.ganglia.GangliaSink30
+#
+# for Ganglia 3.1 support
+*.sink.ganglia.class=org.apache.hadoop.metrics2.sink.ganglia.GangliaSink31
+
+*.sink.ganglia.period=10
+
+# default for supportsparse is false
+*.sink.ganglia.supportsparse=true
+
+*.sink.ganglia.slope=jvm.metrics.gcCount=zero,jvm.metrics.memHeapUsedM=both
+*.sink.ganglia.dmax=jvm.metrics.threadsBlocked=70,jvm.metrics.memHeapUsedM=40
+
+namenode.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+datanode.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+journalnode.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+resourcemanager.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+nodemanager.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+mrappmaster.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+jobhistoryserver.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649
+
+zkfc.sink.ganglia.servers={{ groups.gmetad | join(":8649,") }}:8649

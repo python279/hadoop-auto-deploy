@@ -1,0 +1,12 @@
+---
+- hosts: hive
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: start metastore
+      shell: "nohup {{ hive_install_dir }}/hive-release/bin/hive --service metastore --hiveconf hive.log4j.file={{ hive_install_dir }}/hive-release/conf/meta-log4j.properties > {{ hive_logdir }}/metastore.log 2>&1 &"
+      become: true
+      become_user: hive
+      become_method: su
+      become_flags: '-s /bin/sh'

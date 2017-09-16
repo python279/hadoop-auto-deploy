@@ -1,0 +1,60 @@
+- name: install epel yum repos
+  yum: name=epel-release state=present
+
+- name: yum update
+  yum: name=* state=latest
+
+- name: yum install necessary pkgs
+  yum: name={{ item }} state=present
+  with_items:
+    - ansible
+    - libselinux-python
+    - xz
+    - vim
+    - zip
+    - unzip
+    - git
+    - mysql
+    - bzip2
+    - iftop
+    - iotop
+    - rsync
+    - pssh
+
+- name: disable selinux
+  selinux: state=permissive policy=disabled
+
+- name: disable iptables
+  service: name=iptables state=stopped enabled=no
+
+- name: disable ip6tables
+  service: name=ip6tables state=stopped enabled=no
+
+- name: enable ntpdate
+  service: name=ntpdate state=started enabled=yes
+
+- name: chattr -i /etc/localtime
+  command: chattr -i /etc/localtime
+
+- name: change timezone
+  timezone: name={{ tz }}
+
+- name: chattr +i /etc/localtime
+  command: chattr +i /etc/localtime
+
+- name: add hadoop group
+  group: name=hadoop state=present
+
+- name: add hadoop users
+  user: name={{ item }} state=present shell=/bin/bash group=hadoop
+  with_items:
+    - hadoop
+    - hdfs
+    - yarn
+    - mapred
+    - zookeeper
+    - kafka
+    - spark
+    - hbase
+    - hive
+    - kylin

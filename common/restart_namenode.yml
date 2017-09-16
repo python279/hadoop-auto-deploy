@@ -1,0 +1,25 @@
+---
+- hosts: namenode
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop namenode
+      command: hadoop-daemon.sh stop namenode
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 5s
+      command: sleep 5
+
+    - name: start namenode
+      command: hadoop-daemon.sh start namenode
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 5m
+      command: sleep 300

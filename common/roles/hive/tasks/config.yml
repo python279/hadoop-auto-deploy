@@ -1,0 +1,11 @@
+- name: generate hive-site.xml
+  template: src=hive-site.xml.j2 dest={{ hive_install_dir }}/conf/hive-site.xml owner=hive group=hadoop
+
+- name: generate hive-env.sh
+  template: src=hive-env.sh.j2 dest={{ hive_install_dir }}/conf/hive-env.sh owner=hive group=hadoop
+
+- name: generate hive-log4j.properties
+  template: src=hive-log4j.properties.j2 dest={{ hive_install_dir }}/conf/hive-log4j.properties owner=hive group=hadoop
+
+- name: generate meta-log4j.properties
+  template: src=meta-log4j.properties.j2 dest={{ hive_install_dir }}/conf/meta-log4j.properties owner=hive group=hadoop

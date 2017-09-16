@@ -1,0 +1,12 @@
+---
+- hosts: hive
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: start hiveserver2
+      shell: "nohup {{ hive_install_dir }}/hive-release/bin/hive --service hiveserver2 > {{ hive_logdir }}/hiveserver2.log 2>&1 &"
+      become: true
+      become_user: hive
+      become_method: su
+      become_flags: '-s /bin/sh'

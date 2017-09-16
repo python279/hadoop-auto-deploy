@@ -1,0 +1,14 @@
+- name: set ZOO_LOG_DIR
+  lineinfile: path=/etc/profile.d/zookeeper.sh regexp="^ZOO_LOG_DIR=.*" line="ZOO_LOG_DIR={{ zookeeper_workspace }}/logs; export ZOO_LOG_DIR" create=yes
+
+- name: generate zoo.cfg
+  template: src=zoo.cfg.j2 dest={{ zookeeper_install_dir }}/conf/zoo.cfg owner=zookeeper group=hadoop
+
+- name: generate myid file
+  template: src=myid.j2 dest={{ zookeeper_workspace }}/data/myid owner=zookeeper group=hadoop
+
+- name: generate 90-zookeeper.conf
+  template: src=90-zookeeper.conf.j2 dest=/etc/security/limits.d/90-zookeeper.conf
+
+- name: generate zookeeper.sh
+  template: src=zookeeper.sh.j2 dest=/etc/profile.d/zookeeper.sh

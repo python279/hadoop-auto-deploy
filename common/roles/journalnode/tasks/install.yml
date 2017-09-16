@@ -1,0 +1,5 @@
+- name: mkdir {{ hadoop_hdfs_log_dir }}
+  file: path={{ hadoop_hdfs_log_dir }} owner=hdfs group=hadoop mode=0755 state=directory
+
+- name: mkdir {{ hadoop_journalnode_dir }}
+  file: path={{ hadoop_journalnode_dir }} owner=hdfs group=hadoop mode=0700 state=directory

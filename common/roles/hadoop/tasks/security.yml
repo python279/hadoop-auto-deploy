@@ -1,0 +1,64 @@
+- name: "[ -e /etc/security/keystore ] && [ -e /etc/security/truststore ]"
+  shell: "[ -e /etc/security/keystore ] && [ -e /etc/security/truststore ]"
+  ignore_errors: true
+  register: not_exist_key
+
+- name: clean up /root/ca
+  file: path=/root/ca state=absent
+  when: not_exist_key.rc
+
+- name: mkdir /root/ca
+  file: path=/root/ca state=directory
+  when: not_exist_key.rc
+
+- name: copy ca.key to /root
+  copy: src=../ca/ca.key dest=/root/ca/ca.key
+  when: not_exist_key.rc
+
+- name: copy ca.cert to /root
+  copy: src=../ca/ca.cert dest=/root/ca/ca.cert
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 1
+  command: keytool -keystore keystore -alias {{ inventory_hostname }} -validity 9999 -genkey -keyalg RSA -keysize 2048 -dname 'CN={{ inventory_hostname }}, OU={{ domain1_upper }}, O={{ domain1_upper }}, L=Shanghai, ST=Shanghai, C=CN' -storepass {{ ca_passwd }} -keypass {{ ca_passwd }}
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 2
+  command: keytool -keystore truststore -alias CARoot -import -file ca.cert -storepass {{ ca_passwd }} -noprompt
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 3
+  command: keytool -certreq -alias {{ inventory_hostname }} -keystore keystore -file cert.file -storepass {{ ca_passwd }} -noprompt
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 4
+  command: openssl x509 -req -CA ca.cert -CAkey ca.key -in cert.file -out cert.signed -days 9999 -CAcreateserial -passin pass:{{ ca_passwd }}
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 5
+  command: keytool -keystore keystore -alias CARoot -import -file ca.cert -storepass {{ ca_passwd }} -noprompt
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: generate keystore and truststore step 6
+  command: keytool -keystore keystore -alias {{ inventory_hostname }} -import -file cert.signed -storepass {{ ca_passwd }} -noprompt
+  args: 
+    chdir: /root/ca
+  when: not_exist_key.rc
+
+- name: copy keystore to /etc/security
+  copy: src=/root/ca/keystore dest=/etc/security/keystore owner=hadoop group=hadoop remote_src=True mode=0640
+  when: not_exist_key.rc
+
+- name: copy truststore to /etc/security
+  copy: src=/root/ca/truststore dest=/etc/security/truststore owner=hadoop group=hadoop remote_src=True mode=0640
+  when: not_exist_key.rc

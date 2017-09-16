@@ -1,0 +1,13 @@
+---
+- hosts: metastore
+  vars_files:
+    - ../config.yml
+  user: root
+  roles:
+    - common
+    - kerberos
+    - java
+    - gmond
+    - hadoop
+    - hive
+    - metastore

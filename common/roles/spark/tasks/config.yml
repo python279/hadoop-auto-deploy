@@ -1,0 +1,5 @@
+- name: generate spark-env.sh
+  template: src=spark-env.sh.j2 dest={{ spark_install_dir }}/conf/spark-env.sh owner=spark group=hadoop
+
+- name: generate spark-defaults.conf
+  template: src=spark-defaults.conf.j2 dest={{ spark_install_dir }}/conf/spark-defaults.conf owner=spark group=hadoop

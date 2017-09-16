@@ -1,0 +1,5 @@
+- name: enable && restart gmetad
+  service: name=gmetad state=restarted enabled=yes 
+
+- name: enable && restart httpd
+  service: name=httpd state=restarted enabled=yes 

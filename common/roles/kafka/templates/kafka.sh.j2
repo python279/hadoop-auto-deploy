@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export KAFKA_HOME={{ kafka_parent.stdout }}/kafka-release
+export PATH=$KAFKA_HOME/bin:$PATH
+
+export KAFKA_HEAP_OPTS="{{ kafka_heap_opts }}"
+export JMX_PORT=9999

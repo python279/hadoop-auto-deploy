@@ -1,0 +1,19 @@
+- name: install kerberos specific packages
+  yum: name={{ item }} state=present
+  with_items:
+    - krb5-workstation
+    - pam_krb5
+    - sssd
+    - sssd-krb5
+
+- name: authconfig
+  command: authconfig --enableldap --ldapserver=ldap://{{ ldap }} --ldapbasedn=dc={{ domain1 }},dc={{ domain2 }} --enablekrb5 --krb5kdc={{ kdc }} --krb5adminserver={{ kadmin }} --krb5realm={{ domain1_upper }}.{{ domain2_upper }} --updateall --enablemkhomedir  --enablesssd --enablesssdauth --enablecachecreds
+
+- name: sssd
+  service: name=sssd state=started enabled=yes
+
+- name: copy files to remote host
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - src: ./files/kerberos.sh
+      dest: /etc/profile.d/

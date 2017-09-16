@@ -1,0 +1,9 @@
+- name: generate server.properties
+  template: src=server.properties.j2 dest={{ kafka_install_dir }}/config/server.properties owner=kafka group=hadoop
+
+- name: generate 90-kafka.conf
+  template: src=90-kafka.conf.j2 dest=/etc/security/limits.d/90-kafka.conf owner=root group=root
+
+- name: generate kafka.sh
+  template: src=kafka.sh.j2 dest=/etc/profile.d/kafka.sh owner=root group=root
+

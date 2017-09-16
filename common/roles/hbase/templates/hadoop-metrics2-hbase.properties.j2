@@ -1,0 +1,12 @@
+*.sink.file*.class=org.apache.hadoop.metrics2.sink.FileSink
+# default sampling period
+*.period=10
+ 
+*.source.filter.class=org.apache.hadoop.metrics2.filter.GlobFilter
+*.record.filter.class=${*.source.filter.class}
+*.metric.filter.class=${*.source.filter.class}
+hbase.sink.ganglia.record.filter.exclude=*Regions*
+hbase.sink.ganglia.class=org.apache.hadoop.metrics2.sink.ganglia.GangliaSink31
+hbase.sink.ganglia.tagsForPrefix.jvm=ProcessName
+*.sink.ganglia.period=20
+hbase.sink.ganglia.servers={{ groups.gmetad | join(':8649,') }}:8649

@@ -1,0 +1,31 @@
+- name: basename {{ kafka_download_url }}
+  command: basename {{ kafka_download_url }}
+  register: kafka_tarball
+
+- name: download {{ kafka_download_url }}
+  get_url: url={{ kafka_download_url }} dest=/tmp/{{ kafka_tarball.stdout }}
+
+- name: mkdir {{ kafka_install_dir }}
+  file: path={{ kafka_install_dir }} state=directory mode=0755
+
+- name: unarchive /tmp/{{ kafka_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ kafka_tarball.stdout }}
+    dest: '{{ kafka_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: chown {{ kafka_install_dir }}
+  file: path={{ kafka_install_dir }} owner=kafka group=hadoop recurse=yes state=directory
+
+- name: dirname {{ kafka_install_dir }}
+  command: dirname {{ kafka_install_dir }}
+  register: kafka_parent
+
+- name: ln -s {{ kafka_install_dir }} {{ kafka_parent.stdout }}
+  file: dest={{ kafka_parent.stdout }}/kafka-release src={{ kafka_install_dir }} owner=kafka group=hadoop state=link
+
+- name: mkdir kafka workspace
+  file: path={{ item }}/kafka state=directory mode=0755 owner=kafka group=hadoop
+  with_items: "{{ kafka_workspace }}"
+

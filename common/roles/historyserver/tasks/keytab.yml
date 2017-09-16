@@ -1,0 +1,20 @@
+- name: mkdir /tmp/app_keytab
+  local_action:
+    module: file
+    path: /tmp/app_keytab
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: generate mapred.keytab (mapred)
+  local_action: command sh create_app_keytab.sh mapred {{ inventory_hostname }} /tmp/app_keytab/{{ inventory_hostname }}_mapred.keytab
+
+- name: generate mapred.keytab (HTTP)
+  local_action: command sh create_app_keytab.sh HTTP {{ inventory_hostname }} /tmp/app_keytab/{{ inventory_hostname }}_mapred.keytab
+
+- name: mkdir /etc/security/keytab
+  file: path=/etc/security/keytab state=directory owner=root group=root mode=0755
+
+- name: copy keytab to remote host
+  copy: src=/tmp/app_keytab/{{ inventory_hostname }}_mapred.keytab dest=/etc/security/keytab/mapred.keytab owner=mapred group=hadoop mode=0400

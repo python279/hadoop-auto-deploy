@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export HBASE_HOME={{ hbase_parent.stdout }}/hbase-release
+export PATH=$HBASE_HOME/sbin:$HBASE_HOME/bin:$PATH

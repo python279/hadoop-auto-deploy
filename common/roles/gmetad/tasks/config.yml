@@ -1,0 +1,11 @@
+- name: generate /etc/ganglia/gmond.conf
+  template: src=gmond.conf.j2 dest=/etc/ganglia/gmond.conf owner=root group=root
+
+- name: generate /etc/ganglia/gmetad.conf
+  template: src=gmetad.conf.j2 dest=/etc/ganglia/gmetad.conf owner=root group=root
+
+- name: generate /etc/httpd/conf.d/ganglia.conf
+  template: src=ganglia.conf.j2 dest=/etc/httpd/conf.d/ganglia.conf owner=root group=root
+
+- name: generate /etc/ganglia/conf.php
+  template: src=conf.php.j2 dest=/etc/ganglia/conf.php owner=root group=root

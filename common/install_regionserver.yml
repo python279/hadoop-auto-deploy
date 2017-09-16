@@ -1,0 +1,13 @@
+---
+- hosts: regionserver
+  vars_files:
+    - ../config.yml
+  user: root
+  roles:
+    - common
+    - kerberos
+    - java
+    - gmond
+    - hadoop
+    - hbase
+    - regionserver

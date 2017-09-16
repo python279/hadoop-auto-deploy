@@ -1,0 +1,11 @@
+- name: download livy tarball
+  get_url: url={{ livy_download_url }} dest={{ livy_install_dir }}/{{ livy_tarball }}
+
+- name: untar livy tarball 
+  unarchive: src={{ livy_install_dir }}/{{ livy_tarball }} dest={{ livy_install_dir }} remote_src=yes owner=livy group=livy creates={{ livy_install_dir }}/{{ livy_dirname }}
+
+- name: mkdir logs
+  file: path={{ livy_install_dir }}/{{ livy_dirname }}/logs owner=livy group=hadoop state=directory
+
+- name: chown livy
+  file: path={{ livy_install_dir }}/{{ livy_dirname }} state=directory owner=livy group=hadoop recurse=yes

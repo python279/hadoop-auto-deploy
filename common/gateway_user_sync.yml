@@ -1,0 +1,16 @@
+---
+- hosts: gateway
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: create directory keytab
+      file: path=/usr/local/hadoop/keytab state=directory mode=0755
+    - name: rsync keytab
+      synchronize: src=../keytab/ dest=/usr/local/hadoop/keytab/ compress=yes delete=yes
+    - name: rsync home's .ssh
+      synchronize: src=../home/ dest=/home/ compress=yes delete=no
+    #- name: copy refresh_kerberos_tgt.sh
+    #  copy: src=../common/refresh_kerberos_tgt.sh dest=/tmp/
+    #- name: run refresh_kerberos_tgt.sh
+    #  command: sh /tmp/refresh_kerberos_tgt.sh

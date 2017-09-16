@@ -1,0 +1,4 @@
+---
+- include: install.yml
+- include: keytab.yml
+- include: ssh_key.yml

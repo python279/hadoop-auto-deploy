@@ -1,0 +1,31 @@
+- name: mkdir /tmp/hdfs_ssh_key
+  local_action:
+    module: file
+    path: /tmp/hdfs_ssh_key
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: "[ -e /tmp/hdfs_ssh_key/id_rsa ]"
+  shell: "[ -e /tmp/hdfs_ssh_key/id_rsa ]"
+  ignore_errors: true
+  register: not_exist_key
+
+- name: generate ssh key for hdfs
+  local_action: shell ssh-keygen -t rsa -C hdfs -P '' -f /tmp/hdfs_ssh_key/id_rsa
+  ignore_errors: true
+  run_once: true
+  when: not_exist_key.rc
+
+- name: create /home/hdfs/.ssh
+  file: path=/home/hdfs/.ssh state=directory owner=hdfs group=hadoop mode=0700
+
+- name: copy id_rsa
+  copy: src=/tmp/hdfs_ssh_key/id_rsa dest=/home/hdfs/.ssh/ owner=hdfs group=hadoop mode=0400
+
+- name: copy id_rsa.pub
+  copy: src=/tmp/hdfs_ssh_key/id_rsa.pub dest=/home/hdfs/.ssh/id_rsa.pub owner=hdfs group=hadoop mode=0400
+
+- name: copy authorized_keys
+  copy: src=/tmp/hdfs_ssh_key/id_rsa.pub dest=/home/hdfs/.ssh/authorized_keys owner=hdfs group=hadoop mode=0400

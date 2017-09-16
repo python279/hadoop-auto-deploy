@@ -1,0 +1,8 @@
+data_source "{{ cluster_name }}" {{ inventory_hostname }}
+setuid_username ganglia
+rrd_rootdir "{{ rrds }}"
+{% if case_sensitive_hostnames == 'true' %}
+case_sensitive_hostnames 1
+{% elif case_sensitive_hostnames == 'false' %}
+case_sensitive_hostnames 0
+{% endif %}

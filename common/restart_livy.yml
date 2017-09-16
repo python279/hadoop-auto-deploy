@@ -1,0 +1,22 @@
+---
+- hosts: livy
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop livy
+      shell: "kill -9 `ps ax --cols 2000 | grep LivyServer | head -n 1 | awk '{print $1;}'`"
+      become: true
+      become_user: livy
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2
+
+    - name: start livy
+      shell: "nohup sh {{ livy_install_dir }}/{{ livy_dirname }}/bin/livy-server > {{ livy_install_dir }}/{{ livy_dirname }}/start.log 2>&1 &"
+      become: true
+      become_user: livy
+      become_method: su
+      become_flags: '-s /bin/sh'

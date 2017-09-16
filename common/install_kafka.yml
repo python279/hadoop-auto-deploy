@@ -1,0 +1,12 @@
+---
+- hosts: kafka
+  vars_files:
+    - ../config.yml
+  user: root
+  roles:
+    - common
+    - java
+    - kerberos
+    - gmond
+    - kafka
+

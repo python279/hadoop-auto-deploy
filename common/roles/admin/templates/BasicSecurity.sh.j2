@@ -1,0 +1,143 @@
+#!/bin/bash
+
+function set_hdfs_quota() {
+  if [ "$#" != "2" ]; then
+    echo 'invalid parameters'
+    echo 'usage: set_hdfs_quota dir quota'
+    echo 'example: set_hdfs_quota /user/hadoop 1000'
+    return
+  fi
+  dir=$1
+  quota=$2
+  ssh -t -q {{ groups.namenode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; hdfs dfsadmin -setQuota $quota $dir; hdfs dfs -count -q $dir'"
+}
+
+function refresh_fair_scheduler() {
+  ssh -t -q {{ groups.resourcemanager[0] }} "su - yarn -c 'kinit -kt /etc/security/keytab/yarn.keytab yarn/{{ groups.resourcemanager[0] }}; yarn rmadmin -refreshQueues'"
+}
+
+function start_hdfs_balancer() {
+  if [ "$#" != "1" ]; then
+    echo 'invalid parameters'
+    echo 'usage: start_hdfs_balancer threshold'
+    echo 'example: start_hdfs_balancer 2'
+    return
+  fi
+  threshold=$1
+  ssh -t -q {{ groups.datanode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; start-balancer.sh -threshold $threshold'"
+}
+
+function set_hdfs_balancer_bandwidth() {
+  if [ "$#" != "1" ]; then
+    echo 'invalid parameters'
+    echo 'usage: set_hdfs_balancer_bandwidth bandwidth'
+    echo 'example: set_hdfs_balancer_bandwidth 20000000'
+    return
+  fi
+  bandwidth=$1
+  ssh -t -q {{ groups.namenode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; hdfs dfsadmin -setBalancerBandwidth $bandwidth'"
+}
+
+function refresh_hadoop_proxy_setting() {
+  ssh -t -q {{ groups.namenode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; hdfs dfsadmin -refreshSuperUserGroupsConfiguration'"
+  ssh -t -q {{ groups.resourcemanager[0] }} "su - yarn -c 'kinit -kt /etc/security/keytab/yarn.keytab yarn/{{ groups.resourcemanager[0] }}; yarn rmadmin -refreshSuperUserGroupsConfiguration'"
+}
+
+
+function refresh_hdfs_nodes() {
+  ssh -t -q {{ groups.namenode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; hdfs dfsadmin -refreshNodes'"
+}
+
+function refresh_yarn_nodes() {
+  ssh -t -q {{ groups.resourcemanager[0] }} "su - yarn -c 'kinit -kt /etc/security/keytab/yarn.keytab yarn/{{ groups.resourcemanager[0] }}; yarn rmadmin -refreshNodes'"
+}
+
+function create_hdfs_dir() {
+  if [ "$#" != "3" ]; then
+    echo 'invalid parameters'
+    echo 'usage: create_hdfs_dir username dir permission'
+    echo 'example: create_hdfs_dir hadoop /user/hadoop 775'
+    return
+  fi
+  username=$1
+  dir=$2
+  permission=$3
+  ssh -t -q {{ groups.namenode[0] }} "su - hdfs -c 'kinit -kt /etc/security/keytab/hdfs.keytab hdfs/{{ groups.namenode[0] }}; hdfs dfs -mkdir $dir; hdfs dfs -chown -R $username:$username $dir; hdfs dfs -chmod $permission $dir; hdfs dfs -ls -d $dir'"
+  set_hdfs_quota $dir 10000
+}
+
+function create_hive_db() {
+  if [ "$#" != "2" ]; then
+    echo 'invalid parameters'
+    echo 'usage: create_hive_db username db'
+    echo 'example: create_hive_db hadoop test'
+    return
+  fi
+  username=$1
+  db=$(echo $2 | tr '[A-Z]' '[a-z]')
+  create_hdfs_dir $username /user/hive/warehouse/$db.db  770
+  ssh -t -q {{ groups.hiveserver2[0] }} "su - hive -c 'kinit -kt /etc/security/keytab/hive.keytab hive/{{ groups.hiveserver2[0] }}; beeline -u \"jdbc:hive2://{{ groups.zookeeper | join(':2181,') }}:2181/default;serviceDiscoveryMode=zooKeeper;principal=hive/_HOST@{{ domain1_upper }}.{{ domain2_upper }};hive.server2.proxy.user=$username\" -e \"create database $db; desc database $db;\"'"
+  set_hdfs_quota $dir 10000
+}
+
+function create_hadoop_user() {
+  if [ "$#" != "2" ]; then
+    echo 'invalid parameters'
+    echo 'usage: create_hadoop_user username groups'
+    echo 'example: create_hadoop_user xxjk "scheduler eos_ro"'
+    return
+  fi
+  username=$1
+  groups=$2
+  sh create_user.sh $username "$groups"
+}
+
+function init_hdfs() {
+  create_hdfs_dir hadoop /tmp 777
+  create_hdfs_dir hadoop /tmp/hadoop-yarn 777
+  create_hdfs_dir hadoop /tmp/hadoop-yarn/staging 777
+  create_hdfs_dir hadoop /tmp/spark-logs 777
+  create_hdfs_dir hadoop /tmp/hive 777
+  create_hdfs_dir hadoop /mr-history 777
+  create_hdfs_dir hadoop /mr-history/tmp 777
+  create_hdfs_dir hadoop /mr-history/done 777
+  create_hdfs_dir hadoop /user 775
+  create_hdfs_dir spark /user/spark 770
+  create_hdfs_dir hive /user/hive 775
+  create_hdfs_dir hive /user/hive/warehouse 775
+}
+
+function init_create_user() {
+  create_hadoop_user scheduler ""
+  create_hdfs_dir scheduler /user/scheduler 0770
+  create_hive_db scheduler scheduler
+
+  create_hadoop_user eos "scheduler"
+  create_hdfs_dir eos /user/eos 0775
+  create_hive_db eos eos
+
+  create_hadoop_user cim "scheduler"
+  create_hdfs_dir cim /user/cim 0775
+  create_hive_db cim cim
+
+  create_hadoop_user meta "scheduler"
+  create_hdfs_dir meta /user/meta 0770
+  create_hive_db meta meta
+
+  create_hadoop_user cat "scheduler"
+  create_hdfs_dir cat /user/cat 0770
+  create_hive_db cat cat
+
+  create_hadoop_user wormhole "scheduler"
+  create_hdfs_dir wormhole /user/wormhole 0770
+  create_hive_db wormhole wormhole
+
+  create_hadoop_user rtwriter "scheduler"
+  create_hdfs_dir rtwriter /user/rtwriter 0770
+
+  create_hadoop_user canaan "scheduler"
+  create_hdfs_dir canaan /user/canaan 0770
+
+  create_hadoop_user enlight "scheduler"
+  create_hadoop_user canaan-hive "scheduler"
+}

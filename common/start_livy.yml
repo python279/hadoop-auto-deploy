@@ -1,0 +1,12 @@
+---
+- hosts: livy
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: start livy
+      shell: "nohup sh {{ livy_install_dir }}/{{ livy_dirname }}/bin/livy-server > {{ livy_install_dir }}/{{ livy_dirname }}/start.log 2>&1 &"
+      become: true
+      become_user: livy
+      become_method: su
+      become_flags: '-s /bin/sh'

@@ -1,0 +1,5 @@
+- name: mkdir {{ hive_datadir }}
+  file: path={{ hive_datadir }} state=directory owner=hive group=hadoop
+
+- name: mkdir {{ hive_logdir }}
+  file: path={{ hive_logdir }} state=directory owner=hive group=hadoop

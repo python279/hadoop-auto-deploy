@@ -1,0 +1,25 @@
+---
+- hosts: zkfc
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop zkfc
+      command: hadoop-daemon.sh stop zkfc
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2
+
+    - name: start zkfc
+      command: hadoop-daemon.sh start zkfc
+      become: true
+      become_user: hdfs
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2

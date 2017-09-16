@@ -1,0 +1,12 @@
+---
+- hosts: kafka
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: start kafka
+      shell: nohup kafka-server-start.sh -daemon $KAFKA_HOME/config/server.properties > $KAFKA_HOME/start.log 2>&1 &
+      become: true
+      become_user: kafka
+      become_method: su
+      become_flags: '-s /bin/sh'

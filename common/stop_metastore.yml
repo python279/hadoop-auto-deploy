@@ -1,0 +1,12 @@
+---
+- hosts: hive
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop metastore
+      shell: "kill -9 `ps ax --cols 2000 | grep java | grep metastore | grep -v 'ps ax' | awk '{print $1;}'`"
+      become: true
+      become_user: hive
+      become_method: su
+      become_flags: '-s /bin/sh'

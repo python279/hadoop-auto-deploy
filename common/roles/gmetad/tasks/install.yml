@@ -1,0 +1,11 @@
+- name: yum install ganglia-gmetad ganglia-web httpd
+  yum: name={{ item }} state=present
+  with_items:
+    - ganglia-gmond
+    - ganglia-gmond-python
+    - ganglia-gmetad
+    - ganglia-web
+    - httpd
+
+- name: mkdir {{ rrds }}
+  file: path=/data1/ganglia/rrds state=directory owner=ganglia group=ganglia

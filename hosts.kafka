@@ -1,0 +1,32 @@
+[all:vars]
+cluster_name=kafka
+
+[gmetad]
+c6701.python279.org
+
+[gmetad:vars]
+rrds=/data1/ganglia/rrds
+case_sensitive_hostnames=true
+
+[zookeeper]
+c6702.python279.org
+c6703.python279.org
+c6704.python279.org
+
+[zookeeper:vars]
+java=8
+zookeeper_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
+zookeeper_install_dir=/usr/local/hadoop/zookeeper-3.4.9
+zookeeper_workspace=/data1/zookeeper
+
+[kafka]
+c6702.python279.org
+c6703.python279.org
+c6704.python279.org
+
+[kafka:vars]
+java=8
+kafka_download_url=http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/0.9.0.1/kafka_2.11-0.9.0.1.tgz
+kafka_install_dir=/usr/local/hadoop/kafka_2.11-0.9.0.1
+kafka_workspace=['/data1', '/data2']
+kafka_heap_opts=-Xmx10G -Xms1G

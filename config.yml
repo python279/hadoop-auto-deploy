@@ -1,0 +1,11 @@
+tz: Asia/Shanghai
+domain1: python279
+domain2: org
+domain1_upper: PYTHON279
+domain2_upper: ORG
+ldap: c6701.python279.org
+kdc: c6701.python279.org
+kadmin: c6701.python279.org
+ldap_pw: 1q@w3e$r
+kadmin_pw: 1q@w3e$r
+ca_passwd: 1q@w3e$r

@@ -1,0 +1,25 @@
+---
+- hosts: nodemanager
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop nodemanager
+      command: yarn-daemon.sh stop nodemanager
+      become: true
+      become_user: yarn
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2
+
+    - name: start nodemanager
+      command: yarn-daemon.sh start nodemanager
+      become: true
+      become_user: yarn
+      become_method: su
+      become_flags: '-s /bin/sh'
+
+    - name: sleep 2s
+      command: sleep 2

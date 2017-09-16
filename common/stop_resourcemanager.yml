@@ -1,0 +1,12 @@
+---
+- hosts: resourcemanager
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: stop resourcemanager
+      command: yarn-daemon.sh stop resourcemanager
+      become: true
+      become_user: yarn
+      become_method: su
+      become_flags: '-s /bin/sh'

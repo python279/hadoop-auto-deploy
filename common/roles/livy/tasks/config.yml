@@ -1,0 +1,14 @@
+- name: generate livy-client.xml
+  template: src=livy-client.xml.j2 dest={{ livy_install_dir }}/{{ livy_dirname }}/conf/livy-client.xml owner=livy group=livy
+
+- name: generate livy.conf 
+  template: src=livy.conf.j2 dest={{ livy_install_dir }}/{{ livy_dirname }}/conf/livy.conf owner=livy group=livy
+
+- name: generate livy-env.sh
+  template: src=livy-env.sh.j2 dest={{ livy_install_dir }}/{{ livy_dirname }}/conf/livy-env.sh owner=livy group=livy
+
+- name: generate log4j.properties
+  template: src=log4j.properties.j2 dest={{ livy_install_dir }}/{{ livy_dirname }}/conf/log4j.properties owner=livy group=livy
+
+- name: generate spark-blacklist.conf
+  template: src=spark-blacklist.conf.j2 dest={{ livy_install_dir }}/{{ livy_dirname }}/conf/spark-blacklist.conf owner=livy group=livy

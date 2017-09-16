@@ -1,0 +1,33 @@
+- name: basename {{ zookeeper_download_url }}
+  command: basename {{ zookeeper_download_url }}
+  register: zookeeper_tarball
+
+- name: download {{ zookeeper_download_url }}
+  get_url: url={{ zookeeper_download_url }} dest=/tmp/{{ zookeeper_tarball.stdout }}
+
+- name: mkdir {{ zookeeper_install_dir }}
+  file: path={{ zookeeper_install_dir }} state=directory mode=0755
+
+- name: unarchive /tmp/{{ zookeeper_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ zookeeper_tarball.stdout }}
+    dest: '{{ zookeeper_install_dir }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: chown {{ zookeeper_install_dir }}
+  file: path={{ zookeeper_install_dir }} owner=zookeeper group=hadoop recurse=yes state=directory
+
+- name: dirname {{ zookeeper_install_dir }}
+  command: dirname {{ zookeeper_install_dir }}
+  register: zookeeper_parent
+
+- name: ln -s {{ zookeeper_install_dir }} {{ zookeeper_parent.stdout }}
+  file: dest={{ zookeeper_parent.stdout }}/zookeeper-release src={{ zookeeper_install_dir }} owner=zookeeper group=hadoop state=link
+
+- name: mkdir {{ zookeeper_workspace }}/(data,logs)
+  file: path={{ item }} state=directory mode=0750 owner=zookeeper group=hadoop
+  with_items:
+    - '{{ zookeeper_workspace }}'
+    - '{{ zookeeper_workspace }}/data'
+    - '{{ zookeeper_workspace }}/logs'

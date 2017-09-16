@@ -1,0 +1,12 @@
+---
+- hosts: proxyserver
+  vars_files:
+    - ../config.yml
+  user: root
+  tasks:
+    - name: start proxyserver
+      command: yarn-daemon.sh start proxyserver
+      become: true
+      become_user: yarn
+      become_method: su
+      become_flags: '-s /bin/sh'
