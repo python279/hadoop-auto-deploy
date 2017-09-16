@@ -8,8 +8,8 @@
 - name: mkdir {{ spark_install_dir }}
   file: path={{ spark_install_dir }} state=directory mode=0755
 
-- name: unarcspark /tmp/{{ spark_tarball.stdout }}
-  unarcspark:
+- name: unarchive /tmp/{{ spark_tarball.stdout }}
+  unarchive:
     src: /tmp/{{ spark_tarball.stdout }}
     dest: '{{ spark_install_dir }}'
     copy: no

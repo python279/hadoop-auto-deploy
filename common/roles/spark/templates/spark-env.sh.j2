@@ -63,7 +63,7 @@
 # - SPARK_SHUFFLE_OPTS, to set config properties only for the external shuffle service (e.g. "-Dx=y")
 # - SPARK_DAEMON_JAVA_OPTS, to set config properties for all daemons (e.g. "-Dx=y")
 # - SPARK_PUBLIC_DNS, to set the public dns name of the master or workers
-export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=hdfs://{{ hadoop_namespace }}/tmp/spark-logs"
+export SPARK_HISTORY_OPTS="-Dspark.history.fs.logDirectory=hdfs://{{ cluster_name }}/tmp/spark-logs"
 
 # Generic options for the daemons used in the standalone deploy mode
 # - SPARK_CONF_DIR      Alternate conf dir. (Default: ${SPARK_HOME}/conf)
