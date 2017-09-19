@@ -70,7 +70,7 @@
   </property>
   <property>
     <name>yarn.resourcemanager.nodes.exclude-path</name>
-    <value>{{ hadoop_parent }}/hadoop-release/etc/hadoop/hosts.exclude</value>
+    <value>{{ hadoop_parent.stdout }}/hadoop-release/etc/hadoop/hosts.exclude</value>
   </property>
   <property>
     <name>yarn.resourcemanager.scheduler.class</name>
@@ -82,7 +82,7 @@
   </property>
   <property>
     <name>yarn.scheduler.fair.allocation.file</name>
-    <value>{{ hadoop_parent }}/hadoop-release/etc/hadoop/fair-scheduler.xml</value>
+    <value>{{ hadoop_parent.stdout }}/hadoop-release/etc/hadoop/fair-scheduler.xml</value>
   </property>
   <property>
     <name>yarn.scheduler.fair.user-as-default-queue</name>
@@ -196,7 +196,7 @@
   </property>
   <property>
     <name>yarn.nodemanager.linux-container-executor.path</name>
-    <value>{{ hadoop_parent }}/hadoop-release/bin/container-executor</value>
+    <value>{{ hadoop_parent.stdout }}/hadoop-release/bin/container-executor</value>
   </property>
   <!-- WEB PROXY SECURITY -->
   <property>
