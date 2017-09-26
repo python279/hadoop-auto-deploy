@@ -1,0 +1,43 @@
+- name: basename {{ nagios_download_url }}
+  command: basename {{ nagios_download_url }}
+  register: nagios_tarball
+
+- name: download {{ nagios_download_url }}
+  get_url: url={{ nagios_download_url }} dest=/tmp/{{ nagios_tarball.stdout }}
+
+- name: create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: tempdir
+
+- name: unarchive /tmp/{{ nagios_tarball.stdout }}
+  unarchive:
+    src: /tmp/{{ nagios_tarball.stdout }}
+    dest: '{{ tempdir.path }}'
+    copy: no
+    extra_opts: ['--strip-components=1']
+
+- name: configure nagios
+  shell: './configure --with-command-group=nagcmd --prefix={{ nagios_install_dir }}'
+  args:
+    chdir: '{{ tempdir.path }}'
+
+- name: build nagios
+  shell: 'make all'
+  args:
+    chdir: '{{ tempdir.path }}'
+
+- name: mkdir {{ nagios_install_dir }}
+  file: path={{ nagios_install_dir }} state=directory mode=0755
+
+- name: install nagios
+  shell: 'make install && make install-init && make install-config && make install-commandmode && make install-webconf'
+  args:
+    chdir: '{{ tempdir.path }}'
+
+- name: copy eventhandlers
+  shell: 'cp -rf {{ tempdir.path }}/contrib/eventhandlers {{ nagios_install_dir }}/libexec/'
+
+- name: chown {{ nagios_install_dir }}/libexec/eventhandlers
+  file: path={{ nagios_install_dir }}/libexec/eventhandlers owner=nagios group=nagios recurse=yes

@@ -1,0 +1,26 @@
+- name: install necessary pkgs
+  yum: name={{ item }} state=present
+  with_items:
+    - httpd
+    - php
+    - gcc
+    - glibc
+    - glibc-common
+    - gd
+    - gd-devel
+    - make
+    - net-snmp
+    - unzip
+
+- name: create nagios, nagcmd group
+  group: name={{ item }} state=present
+  with_items:
+    - nagios
+    - nagcmd
+
+- name: create nagios user
+  user:
+    name: nagios
+    group: nagios
+    groups: nagcmd, apache
+    append: yes

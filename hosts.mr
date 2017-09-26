@@ -1,6 +1,16 @@
 [all:vars]
 cluster_name=earth
 
+[nagios]
+c6701.python279.org
+
+[nagios:vars]
+nagios_download_url=https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.3.4.tar.gz
+nagios_plugins_download_url=https://nagios-plugins.org/download/nagios-plugins-2.2.1.tar.gz
+nagios_install_dir=/usr/local/hadoop/nagios-4.3.4
+nagios_admin_username=admin
+nagios_admin_passwd=admin
+
 [gmetad]
 c6701.python279.org
 
@@ -69,7 +79,7 @@ hive_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/hive/hive-1.2.2/ap
 hive_install_dir=/usr/local/hadoop/apache-hive-1.2.2
 hive_datadir=/data1/hiveData-security
 hive_logdir=/data1/hiveLogs-security
-hive_meta_db_url=jdbc:mysql://192.168.67.1:8066/hive
+hive_meta_db_url=jdbc:mysql://c6701.python279.org:3306/hive
 hive_meta_db_user=hive
 hive_meta_db_passwd=hive
 mysql_connector_java_url=https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.44.tar.gz

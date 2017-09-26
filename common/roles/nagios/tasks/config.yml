@@ -1,0 +1,18 @@
+- name: '{{ nagios_install_dir }}/bin/nagios -v {{ nagios_install_dir }}/etc/nagios.cfg'
+  shell: '{{ nagios_install_dir }}/bin/nagios -v {{ nagios_install_dir }}/etc/nagios.cfg'
+
+- name: generate /etc/profile.d/nagios.sh
+  template: src=nagios.sh.j2 dest=/etc/profile.d/nagios.sh
+
+- name: create htpasswd for nagios
+  htpasswd:
+    path: '{{ nagios_install_dir }}/etc/htpasswd.users'
+    name: '{{ nagios_admin_username }}'
+    password: '{{ nagios_admin_passwd }}'
+    mode: 0644
+
+- name: enable & restart nagios
+  service: name=nagios state=restarted enabled=yes
+
+- name: enable & restart httpd
+  service: name=httpd state=restarted enabled=yes
