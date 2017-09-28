@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+
+import smtplib
+import email
+import logging
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+
+
+class MailSender:
+    def __init__(self, smtp_host, smtp_port=25, smtp_user=None, smtp_pw=None):
+        self.__smtp_host = smtp_host
+        self.__smtp_port = smtp_port
+        self.__smtp_user = smtp_user
+        self.__smtp_pw = smtp_pw
+
+    def __del__(self):
+        pass
+
+    def __isascii(self, s):
+        if s is None:
+            return False
+        if isinstance(s, str):
+            return True
+        if not isinstance(s, unicode):
+            return False
+        try:
+            if len(s.decode("ascii", "strict")) == len(s):
+                return True
+            else:
+                return False
+        except UnicodeDecodeError:
+            return False
+
+    def send_mail(self, sender, to, attachment=None, attachment_name=None, subject=None, body=None):
+        logging.debug("send_mail sender:%s to:%s attachment:%s attachment_name:%s subject:%s body:%s", sender, to, attachment, attachment_name, subject, body)
+        msg = MIMEMultipart()
+        msg['From'] = sender
+        msg['To'] = to
+        msg['Date'] = email.utils.formatdate(localtime=True)
+        if subject is not None:
+            if self.__isascii(subject):
+                msg['Subject'] = subject
+            else:
+                msg['Subject'] = subject.encode("utf-8", "replace")
+
+        # mail body
+        if body is not None:
+            if self.__isascii(body):
+                mail_body = MIMEText(body, "plain")
+            else:
+                mail_body = MIMEText(body.encode("utf-8", "replace"), "plain", "utf-8")
+            msg.attach(mail_body)
+
+        # mail attachment
+        if attachment is not None:
+            with open(attachment, "rb") as f:
+                att1 = MIMEApplication(f.read())
+                if attachment_name is None:
+                    attachment_name = os.path.basename(attachment)
+                if self.__isascii(attachment_name):
+                    att1.add_header('Content-Disposition', 'attachment', filename=attachment_name)
+                else:
+                    att1.add_header('Content-Disposition', 'attachment', filename=("utf-8", "", attachment_name.encode("utf-8", "replace")))
+                msg.attach(att1)
+
+        # now send mail
+        try:
+            s = smtplib.SMTP(self.__smtp_host, self.__smtp_port)
+            if self.__smtp_user is not None and self.__smtp_pw is not None:
+                s.login(self.__smtp_user, self.__smtp_pw)
+            s.sendmail(sender, to, msg.as_string())
+            s.quit()
+        except:
+            pass
+        return
+
+if __name__ == '__main__':
+    import os
+    import sys
+    reload(sys)
+    sys.setdefaultencoding("utf-8")
+
+    from optparse import OptionParser
+    parser = OptionParser()
+    parser.add_option("-r", dest="recipient", default=None, help="recipient")
+    parser.add_option("-s", dest="subject", default=None, help="subject")
+    parser.add_option("-b", dest="body", default=None, help="body")
+    (options, args) = parser.parse_args()
+    m = MailSender('localhost', 25)
+    m.send_mail('notify@demo.org', options.recipient, None, None, options.subject, options.body)
+    del m

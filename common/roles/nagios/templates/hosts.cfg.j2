@@ -1,0 +1,31 @@
+{% for h in groups.all %}
+define host {
+	host_name		{{ h }}
+	alias			{{ h }}
+	address			{{ h }}
+	use			cluster-host
+}
+
+{% endfor %}
+
+define hostgroup {
+	hostgroup_name		cluster-hosts
+	alias			all cluster hosts
+	members			{{ groups.all | join(',') }}
+}
+
+{% if groups.gmetad is defined %}
+define hostgroup {
+	hostgroup_name		gmetad-hosts
+	alias			all gmetad hosts
+	members			{{ groups.gmetad | join(',') }}
+}
+{% endif %}
+
+{% if groups.nagios is defined %}
+define hostgroup {
+	hostgroup_name		nagios-hosts
+	alias			all nagios hosts
+	members			{{ groups.nagios | join(',') }}
+}
+{% endif %}

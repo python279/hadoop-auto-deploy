@@ -1,0 +1,19 @@
+define contact{
+        contact_name                    nagiosadmin
+	use				generic-contact
+        alias                           Nagios Admin
+        email                           {{ nagios_admin_email }}
+        }
+
+define contact{
+        contact_name                    haiqiang.li
+	use				generic-contact
+        alias                           haiqiang.li
+        email                           lhq@python279.org
+        }
+
+define contactgroup{
+        contactgroup_name       admins
+        alias                   Nagios Administrators
+        members                 nagiosadmin
+        }

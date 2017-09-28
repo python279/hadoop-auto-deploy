@@ -3,3 +3,4 @@
 - include: nagios.yml
 - include: plugins.yml
 - include: config.yml
+- include: post.yml

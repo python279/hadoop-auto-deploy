@@ -1,0 +1,20 @@
+define service{
+        use                             generic-service
+        hostgroup_name                  cluster-hosts
+        service_description             gmond process
+        check_command                   check_tcp!8649
+}
+
+define service{
+        use                             generic-service
+	hostgroup_name			gmetad-hosts
+        service_description             gmetad process
+        check_command                   check_tcp!8651
+}
+
+define service{
+        use                             generic-service
+        hostgroup_name                  gmetad-hosts,nagios-hosts
+        service_description             httpd process
+        check_command                   check_tcp!80
+}

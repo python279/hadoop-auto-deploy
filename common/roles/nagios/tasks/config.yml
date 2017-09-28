@@ -4,15 +4,37 @@
 - name: generate /etc/profile.d/nagios.sh
   template: src=nagios.sh.j2 dest=/etc/profile.d/nagios.sh
 
-- name: create htpasswd for nagios
+- name: generate nagios conf files
+  template: src={{ item }}.j2 dest={{ nagios_install_dir }}/etc/{{ item }}
+  with_items:
+    - cgi.cfg
+    - nagios.cfg
+    - resource.cfg
+
+- name: generate nagios object conf files
+  template: src={{ item }}.j2 dest={{ nagios_install_dir }}/etc/objects/{{ item }}
+  with_items:
+    - templates.cfg
+    - contacts.cfg
+    - timeperiods.cfg
+    - commands.cfg
+    - hosts.cfg
+    - services.cfg
+
+- name: generate nagios plugins
+  template: src={{ item }}.j2 dest={{ nagios_install_dir }}/libexec/{{ item }} mode=0755
+  with_items:
+    - send_mail.py
+
+- name: create htpasswd for {{ nagios_admin_username }}
   htpasswd:
     path: '{{ nagios_install_dir }}/etc/htpasswd.users'
     name: '{{ nagios_admin_username }}'
     password: '{{ nagios_admin_passwd }}'
-    mode: 0644
 
-- name: enable & restart nagios
-  service: name=nagios state=restarted enabled=yes
+- name: create htpasswd for {{ nagios_readonly_username }}
+  htpasswd:
+    path: '{{ nagios_install_dir }}/etc/htpasswd.users'
+    name: '{{ nagios_readonly_username }}'
+    password: '{{ nagios_readonly_passwd }}'
 
-- name: enable & restart httpd
-  service: name=httpd state=restarted enabled=yes
