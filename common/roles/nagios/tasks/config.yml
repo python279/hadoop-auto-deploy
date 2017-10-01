@@ -25,6 +25,16 @@
   template: src={{ item }}.j2 dest={{ nagios_install_dir }}/libexec/{{ item }} mode=0755
   with_items:
     - send_mail.py
+    - send_sms.py
+    - phone_call.py
+    - check_for_stuck_gmonds.sh
+    - check_ganglia_metric.sh
+    - check_heartbeat.sh
+    - check_host_regex.sh
+    - check_metric_regex.sh
+    - check_multiple_metrics.sh
+    - check_multiple_metrics_warn.sh
+    - check_value_same_everywhere.sh
 
 - name: create htpasswd for {{ nagios_admin_username }}
   htpasswd:

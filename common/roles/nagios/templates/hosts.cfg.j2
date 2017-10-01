@@ -1,3 +1,4 @@
+# define all hosts
 {% for h in groups.all %}
 define host {
 	host_name		{{ h }}
@@ -5,8 +6,8 @@ define host {
 	address			{{ h }}
 	use			cluster-host
 }
-
 {% endfor %}
+# define all hosts
 
 define hostgroup {
 	hostgroup_name		cluster-hosts
