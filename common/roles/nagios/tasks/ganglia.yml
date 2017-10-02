@@ -1,0 +1,64 @@
+- name: create temporary build directory
+  tempfile:
+    state: directory
+    suffix: build
+  register: tempdir
+
+- name: git clone https://github.com/python279/ganglios.git
+  git:
+    repo: 'https://github.com/python279/ganglios.git'
+    dest: '{{ tempdir.path }}'
+
+- name: copy files to /usr/lib/python2.6/site-packages
+  copy:
+    src: '{{ item }}'
+    dest: /usr/lib/python2.6/site-packages
+    remote_src: yes
+  with_items:
+    - '{{ tempdir.path }}/src/ganglia_parser'
+
+- name: mkdir /usr/lib/python2.6/site-packages/ganglios
+  file:
+    path: /usr/lib/python2.6/site-packages/ganglios
+    state: directory
+    mode: 0755
+
+- name: copy files to /usr/lib/python2.6/site-packages/ganglios
+  copy:
+    src: '{{ item }}'
+    dest: /usr/lib/python2.6/site-packages/ganglios
+    remote_src: yes
+  with_items:
+    - '{{ tempdir.path }}/src/ganglios/__init__.py'
+    - '{{ tempdir.path }}/src/ganglios/ganglios.py'
+
+- name: copy files to {{ nagios_install_dir }}/libexec
+  copy:
+    src: '{{ item }}'
+    dest: '{{ nagios_install_dir }}/libexec'
+    mode: 0755
+  with_items:
+    - '{{ tempdir.path }}/src/check_ganglios_disk'
+    - '{{ tempdir.path }}/src/check_ganglios_diskio'
+    - '{{ tempdir.path }}/src/check_ganglios_generic_value'
+    - '{{ tempdir.path }}/src/check_ganglios_generic_value_ratio'
+    - '{{ tempdir.path }}/src/check_ganglios_memory_v2'
+
+- name: mkdir /var/lib/ganglia/xmlcache
+  file:
+    path: '{{ item }}'
+    owner: nagios
+    group: nagios
+    mode: 0755
+    state: directory
+  with_items:
+    - /var/lib/ganglia/xmlcache
+    - /var/log/ganglia
+
+
+- name: create cron job for ganglia_parser
+  cron:
+    name: 'ganglia_parser'
+    user: nagios
+    minute: '*/2'
+    job: 'python /usr/lib/python2.6/site-packages/ganglia_parser'

@@ -1,6 +1,9 @@
 - name: chown {{ nagios_install_dir }}
   file: path={{ nagios_install_dir }} owner=nagios group=nagios recurse=yes state=directory
 
+- name: enable & restart crond
+  service: name=crond state=restarted enabled=yes
+
 - name: enable & restart nagios
   service: name=nagios state=restarted enabled=yes
 

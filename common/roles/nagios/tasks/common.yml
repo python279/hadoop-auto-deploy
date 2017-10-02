@@ -11,6 +11,7 @@
     - make
     - net-snmp
     - unzip
+    - git
 
 - name: create nagios, nagcmd group
   group: name={{ item }} state=present
