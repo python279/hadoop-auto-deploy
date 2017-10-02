@@ -5,7 +5,7 @@ define command{
 
 define command{
 	command_name	notify-service-by-email
-	command_line	$$SER1$/send_mail.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTEMAIL$
+	command_line	$USER1$/send_mail.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTEMAIL$
 	}
 
 define command{
@@ -15,7 +15,7 @@ define command{
 
 define command{
 	command_name	notify-service-by-sms
-	command_line	$$SER1$/send_sms.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTPAGER$
+	command_line	$USER1$/send_sms.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTPAGER$
 	}
 
 define command{
@@ -25,7 +25,7 @@ define command{
 
 define command{
 	command_name	notify-service-by-phonecall
-	command_line	$$SER1$/phone_call.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTPAGER$
+	command_line	$USER1$/phone_call.py -b "***** Nagios *****</br></br>Notification Type: $NOTIFICATIONTYPE$</br></br>Service: $SERVICEDESC$</br>Host: $HOSTALIAS$</br>Address: $HOSTADDRESS$</br>State: $SERVICESTATE$</br></br>Date/Time: $LONGDATETIME$</br></br>Additional Info:</br></br>$SERVICEOUTPUT$</br>" -s "** $NOTIFICATIONTYPE$ Service Alert: $HOSTALIAS$/$SERVICEDESC$ is $SERVICESTATE$ **" -r $CONTACTPAGER$
 	}
 
 define command{
@@ -126,6 +126,16 @@ define command{
 define command{
 	command_name	check_nt
 	command_line	$USER1$/check_nt -H $HOSTADDRESS$ -p 12489 -v $ARG1$ $ARG2$
+	}
+
+define command{
+	command_name	check_load
+	command_line	$USER1$/check_multiple_metrics_warn.sh host=$HOSTADDRESS$ checks='load_one,more,8,more,16:load_five,more,4,more,8:load_fifteen,more,2,more,4'
+	}
+
+define command{
+	command_name	check_for_stuck_gmonds
+	command_line	$USER1$/check_for_stuck_gmonds.sh
 	}
 
 define command{

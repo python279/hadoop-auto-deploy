@@ -18,3 +18,17 @@ define service{
         service_description             httpd process
         check_command                   check_tcp!80
 }
+
+define service{
+        use                             generic-service
+        hostgroup_name                  cluster-hosts
+        service_description             system average load
+        check_command                   check_load
+}
+
+define service{
+        use                             generic-service
+        hostgroup_name                  cluster-hosts
+        service_description             stuck gmonds
+        check_command                   check_for_stuck_gmonds
+}

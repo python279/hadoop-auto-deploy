@@ -1,3 +1,6 @@
+- name: enable && restart gmond
+  service: name=gmond state=restarted enabled=yes 
+
 - name: enable && restart gmetad
   service: name=gmetad state=restarted enabled=yes 
 

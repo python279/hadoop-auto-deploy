@@ -6,6 +6,11 @@
     - ganglia-gmetad
     - ganglia-web
     - httpd
+    - php-common
+    - php-cli
+    - php-gd
+    - php
+    - rrdtool
 
 - name: mkdir {{ rrds }}
-  file: path=/data1/ganglia/rrds state=directory owner=ganglia group=ganglia
+  file: path=/data1/ganglia/rrds state=directory owner=ganglia group=ganglia mode=0777
