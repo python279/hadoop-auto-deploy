@@ -29,41 +29,6 @@ define command{
 	}
 
 define command{
-        command_name    check-host-alive
-        command_line    $USER1$/check_ping -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
-        }
-
-define command{
-        command_name    check_local_disk
-        command_line    $USER1$/check_disk -w $ARG1$ -c $ARG2$ -p $ARG3$
-        }
-
-define command{
-        command_name    check_local_load
-        command_line    $USER1$/check_load -w $ARG1$ -c $ARG2$
-        }
-
-define command{
-        command_name    check_local_procs
-        command_line    $USER1$/check_procs -w $ARG1$ -c $ARG2$ -s $ARG3$
-        }
-
-define command{
-        command_name    check_local_users
-        command_line    $USER1$/check_users -w $ARG1$ -c $ARG2$
-        }
-
-define command{
-	command_name	check_local_swap
-	command_line	$USER1$/check_swap -w $ARG1$ -c $ARG2$
-	}
-
-define command{
-	command_name	check_local_mrtgtraf
-	command_line	$USER1$/check_mrtgtraf -F $ARG1$ -a $ARG2$ -w $ARG3$ -c $ARG4$ -e $ARG5$
-	}
-
-define command{
         command_name    check_ftp
         command_line    $USER1$/check_ftp -H $HOSTADDRESS$ $ARG1$
         }
@@ -129,14 +94,19 @@ define command{
 	}
 
 define command{
-	command_name	check_load
-	command_line	$USER1$/check_multiple_metrics_warn.sh host=$HOSTADDRESS$ checks='load_one,more,8,more,16:load_five,more,4,more,8:load_fifteen,more,2,more,4'
+	command_name	check_ganglia_metrics
+	command_line	$USER1$/check_ganglios_generic_value -H $HOSTADDRESS$ -m $ARG1$ -w $ARG2$ -c $ARG3$ -o $ARG4$
 	}
 
 define command{
-	command_name	check_for_stuck_gmonds
-	command_line	$USER1$/check_for_stuck_gmonds.sh
+	command_name	check_ganglia_metrics_ratio
+	command_line	$USER1$/check_ganglios_generic_value_ratio -H $HOSTADDRESS$ -n $ARG1$ -m $ARG2$ -w $ARG3$ -c $ARG4$ -o $ARG5$
 	}
+
+define command{
+        command_name    check-host-alive
+        command_line    $USER1$/check_ping -H $HOSTADDRESS$ -w 3000.0,80% -c 5000.0,100% -p 5
+        }
 
 define command{
 	command_name	process-host-perfdata

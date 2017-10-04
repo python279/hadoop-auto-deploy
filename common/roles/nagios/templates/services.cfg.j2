@@ -22,13 +22,27 @@ define service{
 define service{
         use                             generic-service
         hostgroup_name                  cluster-hosts
-        service_description             system average load
-        check_command                   check_load
+        service_description             load_one
+        check_command                   check_ganglia_metrics!load_one!8!16!gt
 }
 
 define service{
         use                             generic-service
         hostgroup_name                  cluster-hosts
-        service_description             stuck gmonds
-        check_command                   check_for_stuck_gmonds
+        service_description             load_five
+        check_command                   check_ganglia_metrics!load_five!4!8!gt
+}
+
+define service{
+        use                             generic-service
+        hostgroup_name                  cluster-hosts
+        service_description             load_fifteen
+        check_command                   check_ganglia_metrics!load_fifteen!2!4!gt
+}
+
+define service{
+        use                             generic-service
+        hostgroup_name                  cluster-hosts
+        service_description             free_physical_memory_ratio
+        check_command                   check_ganglia_metrics_ratio!mem_free!mem_total!0.2!0.1!lt
 }
