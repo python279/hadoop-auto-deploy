@@ -30,3 +30,115 @@ define hostgroup {
 	members			{{ groups.nagios | join(',') }}
 }
 {% endif %}
+
+{% if groups.zookeeper is defined %}
+define hostgroup {
+	hostgroup_name		zookeeper-hosts
+	alias			all zookeeper hosts
+	members			{{ groups.zookeeper | join(',') }}
+}
+{% endif %}
+
+{% if groups.journalnode is defined %}
+define hostgroup {
+	hostgroup_name		journalnode-hosts
+	alias			all journalnode hosts
+	members			{{ groups.journalnode | join(',') }}
+}
+{% endif %}
+
+{% if groups.namenode is defined %}
+define hostgroup {
+	hostgroup_name		namenode-hosts
+	alias			all namenode hosts
+	members			{{ groups.namenode | join(',') }}
+}
+{% endif %}
+
+{% if groups.datanode is defined %}
+define hostgroup {
+	hostgroup_name		datanode-hosts
+	alias			all datanode hosts
+	members			{{ groups.datanode | join(',') }}
+}
+{% endif %}
+
+{% if groups.resourcemanager is defined %}
+define hostgroup {
+	hostgroup_name		resourcemanager-hosts
+	alias			all resourcemanager hosts
+	members			{{ groups.resourcemanager | join(',') }}
+}
+{% endif %}
+
+{% if groups.nodemanager is defined %}
+define hostgroup {
+	hostgroup_name		nodemanager-hosts
+	alias			all nodemanager hosts
+	members			{{ groups.nodemanager | join(',') }}
+}
+{% endif %}
+
+{% if groups.zkfc is defined %}
+define hostgroup {
+	hostgroup_name		zkfc-hosts
+	alias			all zkfc hosts
+	members			{{ groups.zkfc | join(',') }}
+}
+{% endif %}
+
+{% if groups.historyserver is defined %}
+define hostgroup {
+	hostgroup_name		historyserver-hosts
+	alias			all historyserver hosts
+	members			{{ groups.historyserver | join(',') }}
+}
+{% endif %}
+
+{% if groups.proxyserver is defined %}
+define hostgroup {
+	hostgroup_name		proxyserver-hosts
+	alias			all proxyserver hosts
+	members			{{ groups.proxyserver | join(',') }}
+}
+{% endif %}
+
+{% if groups.master is defined %}
+define hostgroup {
+	hostgroup_name		master-hosts
+	alias			all hbase master hosts
+	members			{{ groups.master | join(',') }}
+}
+{% endif %}
+
+{% if groups.regionserver is defined %}
+define hostgroup {
+	hostgroup_name		regionserver-hosts
+	alias			all hbase regionserver hosts
+	members			{{ groups.regionserver | join(',') }}
+}
+{% endif %}
+
+{% if groups.metastore is defined %}
+define hostgroup {
+	hostgroup_name		metastore-hosts
+	alias			all hive metastore hosts
+	members			{{ groups.metastore | join(',') }}
+}
+{% endif %}
+
+{% if groups.hiveserver2 is defined %}
+define hostgroup {
+	hostgroup_name		hiveserver2-hosts
+	alias			all hive hiveserver2 hosts
+	members			{{ groups.hiveserver2 | join(',') }}
+}
+{% endif %}
+
+{% if groups.spark_historyserver is defined %}
+define hostgroup {
+	hostgroup_name		spark_historyserver-hosts
+	alias			all spark historyserver hosts
+	members			{{ groups.spark_historyserver | join(',') }}
+}
+{% endif %}

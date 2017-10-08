@@ -46,3 +46,39 @@ define service{
         service_description             free_physical_memory_ratio
         check_command                   check_ganglia_metrics_ratio!mem_free!mem_total!0.2!0.1!lt
 }
+
+{% if groups.zookeeper is defined %}
+define service{
+        use                             generic-service
+        hostgroup_name                  zookeeper-hosts
+        service_description             zookeeper process
+        check_command                   check_tcp!2181
+}
+{% endif %}
+
+{% if groups.namenode is defined %}
+define service{
+        use                             generic-service
+        hostgroup_name                  namenode-hosts
+        service_description             namenode process
+        check_command                   check_tcp!9000
+}
+{% endif %}
+
+{% if groups.journalnode is defined %}
+define service{
+        use                             generic-service
+        hostgroup_name                  journalnode-hosts
+        service_description             journalnode process
+        check_command                   check_tcp!8485
+}
+{% endif %}
+
+{% if groups.datanode is defined %}
+define service{
+        use                             generic-service
+        hostgroup_name                  datanode-hosts
+        service_description             datanode process
+        check_command                   check_tcp!50010
+}
+{% endif %}

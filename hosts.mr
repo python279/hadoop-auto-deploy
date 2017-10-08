@@ -28,7 +28,7 @@ c6704.python279.org
 
 [zookeeper:vars]
 java=8
-zookeeper_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
+zookeeper_download_url=https://mirror.bit.edu.cn/apache/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz
 zookeeper_install_dir=/usr/local/hadoop/zookeeper-3.4.9
 zookeeper_workspace=/data1/zookeeper
 
@@ -77,7 +77,7 @@ hiveserver2
 
 [hive:vars]
 java=8
-hive_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz
+hive_download_url=https://mirror.bit.edu.cn/apache/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz
 #hive_udf_download_url=
 hive_install_dir=/usr/local/hadoop/apache-hive-1.2.2
 hive_datadir=/data1/hiveData-security
@@ -95,7 +95,7 @@ spark_historyserver
 
 [spark:vars]
 java=8
-spark_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.0.2/spark-2.0.2-bin-without-hadoop.tgz
+spark_download_url=https://mirror.bit.edu.cn/apache/spark/spark-2.0.2/spark-2.0.2-bin-without-hadoop.tgz
 spark_install_dir=/usr/local/hadoop/spark-2.0.2
 spark_log_dir=/data1/sparkLogs
 
@@ -112,7 +112,7 @@ spark_historyserver
 
 [hadoop:vars]
 java=8
-hadoop_download_url=http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.4/hadoop-2.7.4.tar.gz
+hadoop_download_url=http://mirror.bit.edu.cn/apache/hadoop/common/hadoop-2.8.1/hadoop-2.8.1.tar.gz
 hadoop_install_dir=/usr/local/hadoop/hadoop-2.7.4
 hadoop_workspace=['/data1', '/data2', '/data3', '/data4', '/data5', '/data6']
 hadoop_namenode_dir=/data1/dfs/name
@@ -126,7 +126,7 @@ c6704.python279.org
 
 [gateway:vars]
 java=8
-hive_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz
+hive_download_url=https://mirror.bit.edu.cn/apache/hive/hive-1.2.2/apache-hive-1.2.2-bin.tar.gz
 #hive_udf_download_url=
 hive_install_dir=/usr/local/hadoop/apache-hive-1.2.2
 hive_datadir=/tmp
@@ -134,10 +134,10 @@ hive_logdir=/tmp
 hive_meta_db_url=invalid
 hive_meta_db_user=invalid
 hive_meta_db_passwd=invalid
-spark_download_url=https://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.0.2/spark-2.0.2-bin-without-hadoop.tgz
+spark_download_url=https://mirror.bit.edu.cn/apache/spark/spark-2.0.2/spark-2.0.2-bin-without-hadoop.tgz
 spark_install_dir=/usr/local/hadoop/spark-2.2.0
 spark_log_dir=/tmp
-hadoop_download_url=http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.4/hadoop-2.7.4.tar.gz
+hadoop_download_url=http://mirror.bit.edu.cn/apache/hadoop/common/hadoop-2.8.1/hadoop-2.8.1.tar.gz
 hadoop_install_dir=/usr/local/hadoop/hadoop-2.7.4
 hadoop_workspace=/tmp
 hadoop_namenode_dir=/tmp
