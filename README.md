@@ -1,4 +1,4 @@
-# hadoosp-auto-deploy
+# hadoop-auto-deploy
 
 ## download jdk8 to common/roles/java/files/jdk8-linux-x64.tar.gz
 
