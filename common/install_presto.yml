@@ -1,0 +1,9 @@
+---
+- hosts: presto
+  vars_files:
+    - ../config.yml
+  user: hadoop
+  sudo: yes
+  roles:
+    #- java
+    - presto

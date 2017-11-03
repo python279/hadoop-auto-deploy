@@ -1,0 +1,5 @@
+- name: generate presto clients shell shortcut
+  template: src={{ item }}.j2  dest=/usr/local/bin/{{ item }} mode=0755
+  with_items:
+    - presto_cli
+    - presto_benchmark_driver

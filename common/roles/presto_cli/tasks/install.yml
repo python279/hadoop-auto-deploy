@@ -1,0 +1,5 @@
+- name: copy presto clients to remote host
+  copy: src=./files/{{ item }} dest=/usr/local/bin mode=0755
+  with_items:
+    - '{{ presto_cli_jar }}'
+    - '{{ presto_benchmark_driver }}'
