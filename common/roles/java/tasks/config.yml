@@ -1,0 +1,2 @@
+- name: generate java{{ java }}.sh
+  template: src=java.sh.j2  dest=/opt/java{{ java }}.sh mode=0755

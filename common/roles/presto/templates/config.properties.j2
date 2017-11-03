@@ -1,0 +1,11 @@
+{% if "coordinator" in group_names %}
+coordinator=true
+node-scheduler.include-coordinator=false
+discovery-server.enabled=true
+{% else %}
+coordinator=false
+{% endif %}
+http-server.http.port=8080
+query.max-memory=4GB
+query.max-memory-per-node=1GB
+discovery.uri=http://{{ groups.coordinator[0] }}:8080

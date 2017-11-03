@@ -1,3 +1,7 @@
+[all:vars]
+java=8
+java_download_url=http://10.14.210.114/archive/jdk/jdk-8u144-linux-x64.tar.gz
+
 [coordinator]
 datanodea
 
@@ -11,8 +15,7 @@ coordinator
 worker
 
 [presto:vars]
-java=8
-presto_rpm=presto-server-rpm-0.188-SNAPSHOT.x86_64.rpm
+presto_repo_url=http://10.14.210.114/presto/presto.repo
 presto_env=test
 presto_data_dir=/data/presto/data
 
@@ -20,7 +23,6 @@ presto_data_dir=/data/presto/data
 datanodea
 
 [presto_cli:vars]
-presto_cli_jar=presto-cli-0.188-SNAPSHOT-executable.jar
-presto_benchmark_driver=presto-benchmark-driver-0.188-SNAPSHOT-executable.jar
-java=8
+presto_cli_jar_url=http://10.14.210.114/archive/presto/bin/presto-cli-0.188-SNAPSHOT-executable.jar
+presto_benchmark_driver_url=http://10.14.210.114/archive/presto/bin/presto-benchmark-driver-0.188-SNAPSHOT-executable.jar
 

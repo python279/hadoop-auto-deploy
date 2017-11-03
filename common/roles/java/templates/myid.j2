@@ -1,5 +1,0 @@
-{% for zk in groups['zookeeper'] %}
-{% if  zk  ==  inventory_hostname  %}
-{{ loop.index }}
-{% endif %}
-{% endfor %}

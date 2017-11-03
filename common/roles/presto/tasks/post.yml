@@ -1,0 +1,2 @@
+- name: enable && restart presto
+  service: name=presto state=restarted enabled=yes 
