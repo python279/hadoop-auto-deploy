@@ -1,8 +1,8 @@
-- name: copy {{ presto_rpm }} to remote host
-  copy: src=./files/{{ presto_rpm }} dest=/tmp/
+- name: download presto repo
+  get_url: url={{ presto_repo_url }} dest=/etc/yum.repo.d/
 
-- name: yum install /tmp/{{ presto_rpm }}
-  yum: name=/tmp/{{ presto_rpm }} state=present
+- name: yum install presto-server
+  yum: name=presto-server state=present
 
 - name: mkdir /etc/presto/catalog
   file: path=/etc/presto/catalog state=directory owner=root group=root mode=0755
